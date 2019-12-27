@@ -10,7 +10,7 @@ var VOTE_A_KEY = 'vote_a'
 var VOTE_B_KEY = 'vote_b'
 
 var redisOptions = {
-  host: process.env.REDIS_HOST || 'localhost',
+  host: process.env.REDIS_HOST || 'redis',
   port: 6379
 }
 
@@ -144,16 +144,22 @@ var server = new GraphQLServer({
   resolvers
 })
 
+var port = 4000
+if (process.argv.length > 2) {
+  port = parseInt(process.argv[2], 10)
+}
+
 server.express.use('/', express.static('public'))
 initVotes(false).then(function () {
   server.start(
     {
       endpoint: '/graphql',
       subscriptions: '/graphql',
-      playground: '/graphql'
+      playground: '/graphql',
+      port
     },
     function () {
-      console.log('Server is running on localhost:4000')
+      console.log(`Server is running on :${port}`)
     }
   )  
 })

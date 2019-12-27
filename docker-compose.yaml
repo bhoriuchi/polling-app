@@ -1,0 +1,21 @@
+version: '2.4'
+services:
+  redis:
+    hostname: redis
+    image: redis
+    networks:
+      - dev
+
+  app:
+    build: ./
+    ports:
+      - "8085:80"
+    environment:
+      REDIS_HOST: redis
+    networks:
+      - dev
+    depends_on:
+      - redis
+
+networks:
+  dev:

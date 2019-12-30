@@ -3,6 +3,13 @@
     <md-card style="border: 0px; box-shadow: none; max-width: 800px;">
       <md-card-content>
         <h3 class="md-title">.GIF Pronunciation</h3>
+        <p v-if="showURL">
+          <span style="font-size: 2em;">Vote @ </span>
+          <span style="font-size: 3em;">{{url}}</span>
+        </p>
+        <p v-else>
+          <a @click="showURL = true">show url</a>
+        </p>
         <results-chart :a="a" :b="b" />
         <div v-if="!open && (a > 0 || b > 0)">
           <h1 v-if="a === b">
@@ -30,6 +37,11 @@
 import gql from 'graphql-tag'
 import ResultsChart from '@/components/Chart'
 
+const protocol = window.location.protocol
+const host = process.env.NODE_ENV === 'production'
+  ? window.location.host
+  : 'localhost:4000'
+
 export default {
   components: {
     ResultsChart
@@ -38,7 +50,9 @@ export default {
     return {
       open: false,
       a: 0,
-      b: 0
+      b: 0,
+      showURL: false,
+      url: `${protocol}//${host}`
     }
   },
   apollo: {

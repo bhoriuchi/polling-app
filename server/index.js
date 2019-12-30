@@ -9,9 +9,14 @@ var VOTE_OPEN_KEY = 'vote_open'
 var VOTE_A_KEY = 'vote_a'
 var VOTE_B_KEY = 'vote_b'
 
+var retries = process.env.REDIS_MAX_RETRIES
+  ? parseInt(process.env.REDIS_MAX_RETRIES, 10)
+  : 20
+
 var redisOptions = {
-  host: process.env.REDIS_HOST || 'redis',
-  port: 6379
+  host: process.env.REDIS_HOST || 'localhost',
+  port: 6379,
+  maxRetriesPerRequest: retries
 }
 
 var db = new Redis(redisOptions)
